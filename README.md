@@ -49,6 +49,28 @@ npm install
 ng serve
 ```
 
+## Deployment
+
+### Lokale Deployment
+
+```bash
+# Setup (eerste keer)
+npm run deploy:setup
+
+# Deploy naar GitHub Pages
+npm run deploy
+```
+
+### Automatische Deployment via GitHub Actions
+
+De applicatie wordt automatisch gedeployed bij push naar de `main` branch.
+
+### Deployment Commands
+
+- `npm run build:prod` - Build voor productie
+- `npm run deploy` - Volledige deployment (build + deploy)
+- `npm run deploy:setup` - Installeer gh-pages package
+
 ## Deployment naar GitHub Pages
 
 ### 1. GitHub Secrets instellen
