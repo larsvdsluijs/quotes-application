@@ -31,6 +31,11 @@ export class AuthService {
     private firestore: Firestore
   ) {
     this.user$ = user(this.auth);
+    
+    // Debug: Log authentication state changes
+    this.user$.subscribe(user => {
+      console.log('AuthService: Authentication state changed:', user ? 'User logged in' : 'No user');
+    });
   }
 
   async login(username: string, password: string): Promise<{ needsPasswordChange: boolean }> {

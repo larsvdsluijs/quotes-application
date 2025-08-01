@@ -6,7 +6,7 @@ const indexPath = path.join(__dirname, '../dist/quotes-applictation/browser/inde
 let content = fs.readFileSync(indexPath, 'utf8');
 
 // Replace the base href for GitHub Pages
-content = content.replace('<base href="/">', '<base href="/quotes-applictation/">');
+content = content.replace('<base href="/">', '<base href="/quotes-application/">');
 
 // Write the updated content back to the file
 fs.writeFileSync(indexPath, content);

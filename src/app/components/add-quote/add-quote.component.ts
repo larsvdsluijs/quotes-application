@@ -5,79 +5,17 @@ import { Router, RouterModule } from '@angular/router';
 import { QuoteService } from '../../services/quote.service';
 import { QuoteCreate } from '../../models/quote.model';
 import { AuthService } from '../../services/auth.service';
+import { NavbarComponent } from '../shared/navbar.component';
 import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-add-quote',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Navigation -->
-      <nav class="bg-white shadow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex">
-              <div class="flex-shrink-0 flex items-center">
-                <h1 class="text-xl font-bold text-gray-900">Quotes App</h1>
-              </div>
-            </div>
-            
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-4">
-              <a routerLink="/quotes" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Quotes
-              </a>
-              <a routerLink="/pending-quotes" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Wachtende Quotes
-              </a>
-              <a routerLink="/add-quote" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Quote Toevoegen
-              </a>
-              <a *ngIf="isAdmin$ | async" routerLink="/admin" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Admin
-              </a>
-              <button *ngIf="isLoggedIn$ | async" 
-                      (click)="logout()"
-                      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                Uitloggen
-              </button>
-            </div>
-
-            <!-- Mobile menu button -->
-            <div class="md:hidden flex items-center">
-              <button (click)="toggleMobileMenu()" class="text-gray-700 hover:text-gray-900 focus:outline-none focus:text-gray-900">
-                <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-              </button>
-            </div>
-          </div>
-
-          <!-- Mobile Navigation -->
-          <div *ngIf="mobileMenuOpen" class="md:hidden">
-            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
-              <a routerLink="/quotes" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-                Quotes
-              </a>
-              <a routerLink="/pending-quotes" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-                Wachtende Quotes
-              </a>
-              <a routerLink="/add-quote" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-                Quote Toevoegen
-              </a>
-              <a *ngIf="isAdmin$ | async" routerLink="/admin" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-                Admin
-              </a>
-              <button *ngIf="isLoggedIn$ | async" 
-                      (click)="logout()"
-                      class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-                Uitloggen
-              </button>
-            </div>
-          </div>
-        </div>
-      </nav>
+      <app-navbar></app-navbar>
 
       <!-- Main Content -->
       <div class="max-w-3xl mx-auto py-6 sm:px-6 lg:px-8">

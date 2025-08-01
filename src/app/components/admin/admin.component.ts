@@ -5,97 +5,16 @@ import { Router, RouterModule } from '@angular/router';
 import { QuoteService } from '../../services/quote.service';
 import { AuthService } from '../../services/auth.service';
 import { User } from '../../models/user.model';
+import { NavbarComponent } from '../shared/navbar.component';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [CommonModule, FormsModule, RouterModule],
+  imports: [CommonModule, FormsModule, RouterModule, NavbarComponent],
   template: `
     <div class="min-h-screen bg-gray-50">
       <!-- Navigation -->
-      <nav class="bg-white shadow">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="flex justify-between h-16">
-            <div class="flex">
-              <div class="flex-shrink-0 flex items-center">
-                <h1 class="text-xl font-bold text-gray-900">Quotes App</h1>
-              </div>
-            </div>
-            
-            <!-- Desktop Navigation -->
-            <div class="hidden md:flex items-center space-x-4">
-              <!-- Welcome message for logged in users -->
-              <div *ngIf="currentUser$ | async as user" class="text-sm text-gray-700 mr-4">
-                Welkom, <span class="font-semibold">{{ user.displayName || user.username }}</span>!
-              </div>
-              
-              <a routerLink="/quotes" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Quotes
-              </a>
-              <a routerLink="/pending-quotes" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Wachtende Quotes
-              </a>
-              <a routerLink="/add-quote" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Quote Toevoegen
-              </a>
-              <a *ngIf="isAdmin$ | async" routerLink="/admin" class="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm font-medium">
-                Admin
-              </a>
-              <button *ngIf="isLoggedIn$ | async" 
-                      (click)="logout()"
-                      class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded-md text-sm font-medium transition-colors duration-200">
-                Uitloggen
-              </button>
-            </div>
-            
-            <!-- Mobile menu button -->
-            <div class="md:hidden flex items-center">
-              <button
-                (click)="mobileMenuOpen = !mobileMenuOpen"
-                class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-gray-500 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500"
-                aria-expanded="false">
-                <span class="sr-only">Open main menu</span>
-                <!-- Icon when menu is closed -->
-                <svg *ngIf="!mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
-                </svg>
-                <!-- Icon when menu is open -->
-                <svg *ngIf="mobileMenuOpen" class="block h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-                </svg>
-              </button>
-            </div>
-          </div>
-        </div>
-
-        <!-- Mobile menu -->
-        <div *ngIf="mobileMenuOpen" class="md:hidden">
-          <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-white border-t border-gray-200">
-            <!-- Welcome message for logged in users -->
-            <div *ngIf="currentUser$ | async as user" class="px-3 py-2 text-sm text-gray-700 border-b border-gray-200">
-              Welkom, <span class="font-semibold">{{ user.displayName || user.username }}</span>!
-            </div>
-            
-            <a routerLink="/quotes" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-              Quotes
-            </a>
-            <a routerLink="/pending-quotes" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-              Wachtende Quotes
-            </a>
-            <a routerLink="/add-quote" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-              Quote Toevoegen
-            </a>
-            <a *ngIf="isAdmin$ | async" routerLink="/admin" class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-              Admin
-            </a>
-            <button *ngIf="isLoggedIn$ | async" 
-                    (click)="logout()"
-                    class="text-gray-700 hover:text-gray-900 block px-3 py-2 rounded-md text-base font-medium">
-              Uitloggen
-            </button>
-          </div>
-        </div>
-      </nav>
+      <app-navbar></app-navbar>
 
       <!-- Main Content -->
       <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
