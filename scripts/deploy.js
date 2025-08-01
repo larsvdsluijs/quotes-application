@@ -23,10 +23,19 @@ try {
   process.exit(1);
 }
 
+// Step 2.5: Fix base href for GitHub Pages
+console.log('🔧 Fixing base href for GitHub Pages...');
+try {
+  require('./fix-base-href.js');
+  console.log('✅ Base href updated successfully');
+} catch (error) {
+  console.log('⚠️  Could not update base href:', error.message);
+}
+
 // Step 3: Deploy to GitHub Pages
 console.log('📤 Deploying to GitHub Pages...');
 try {
-  execSync('npx gh-pages -d dist/quotes-applictation', { stdio: 'inherit' });
+  execSync('npx gh-pages -d dist/quotes-applictation/browser', { stdio: 'inherit' });
   console.log('✅ Deployment completed successfully!');
   console.log('🌐 Your app should be available at: https://[username].github.io/[repository-name]');
 } catch (error) {
