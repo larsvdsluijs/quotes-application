@@ -4,16 +4,7 @@ const path = require('path');
 
 console.log('🚀 Starting deployment process...');
 
-// Step 1: Replace environment variables
-console.log('📝 Replacing environment variables...');
-try {
-  require('./replace-env.js');
-  console.log('✅ Environment variables replaced successfully');
-} catch (error) {
-  console.log('⚠️  No environment variables found, using defaults');
-}
-
-// Step 2: Build the application
+// Step 1: Build the application
 console.log('🔨 Building application...');
 try {
   execSync('npm run build:prod', { stdio: 'inherit' });
@@ -23,7 +14,7 @@ try {
   process.exit(1);
 }
 
-// Step 2.5: Fix base href for GitHub Pages
+// Step 2: Fix base href for GitHub Pages
 console.log('🔧 Fixing base href for GitHub Pages...');
 try {
   require('./fix-base-href.js');

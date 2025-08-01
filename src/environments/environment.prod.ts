@@ -1,13 +1,12 @@
-// Environment variables will be replaced at build time by the GitHub Actions workflow
 export const environment = {
   production: true,
   firebase: {
-    apiKey: "FIREBASE_API_KEY",
-    authDomain: "FIREBASE_AUTH_DOMAIN",
-    projectId: "FIREBASE_PROJECT_ID",
-    storageBucket: "FIREBASE_STORAGE_BUCKET",
-    messagingSenderId: "FIREBASE_MESSAGING_SENDER_ID",
-    appId: "FIREBASE_APP_ID",
-    measurementId: "FIREBASE_MEASUREMENT_ID"
+    apiKey: "AIzaSyBqsizLRacxgdF4IZd0W3lI9t3DU31sMJs",
+    authDomain: "test-database-faa54.firebaseapp.com",
+    projectId: "test-database-faa54",
+    storageBucket: "test-database-faa54.firebasestorage.app",
+    messagingSenderId: "561906414923",
+    appId: "1:561906414923:web:c5f911d0009a914260a4ce",
+    measurementId: "G-VYER9XFZSW"
   }
 }; 

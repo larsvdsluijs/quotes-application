@@ -5,10 +5,10 @@
     "ng": "ng",
     "start": "ng serve",
     "build": "ng build",
-    "build:prod": "ng build --configuration production",
+    "build:prod": "ng build --configuration production --base-href https://larsvdsluijs.github.io/quotes-application/",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
-    "deploy": "node scripts/deploy.js",
+    "deploy": "npx gh-pages -d dist/quotes-applictation/browser",
     "deploy:setup": "npm install -g gh-pages",
     "predeploy": "npm run build:prod"
   },
