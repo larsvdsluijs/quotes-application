@@ -8,6 +8,7 @@ import { PendingQuoteModalComponent } from '../pending-quote-modal/pending-quote
 import { EditQuoteModalComponent } from '../edit-quote-modal/edit-quote-modal.component';
 import { NavbarComponent } from '../shared/navbar.component';
 import { take } from 'rxjs/operators';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'app-quotes',
@@ -106,7 +107,7 @@ import { take } from 'rxjs/operators';
       
       <!-- Pending Quote Modal -->
       <app-pending-quote-modal
-        [show]="showPendingModal"
+        [show]="showPendingModal && !(isAdmin$ | async)"
         [quote]="currentPendingQuote"
         (voteSubmitted)="onVoteSubmitted($event)"
         (closed)="closePendingModal()">
@@ -127,7 +128,7 @@ export class QuotesComponent implements OnInit {
   quotes: Quote[] = [];
   loading = true;
   isLoggedIn$;
-  isAdmin$;
+  isAdmin$ = new BehaviorSubject<boolean>(true);
   currentUser$;
   showPendingModal = false;
   currentPendingQuote: Quote | null = null;
@@ -141,8 +142,12 @@ export class QuotesComponent implements OnInit {
     public router: Router
   ) {
     this.isLoggedIn$ = this.authService.user$;
-    this.isAdmin$ = this.authService.isAdmin();
     this.currentUser$ = this.authService.getCurrentUserData();
+    
+    // Subscribe to admin status and update the BehaviorSubject
+    this.authService.isAdmin().subscribe(isAdmin => {
+      (this.isAdmin$ as BehaviorSubject<boolean>).next(isAdmin);
+    });
   }
 
   ngOnInit() {
@@ -198,6 +203,7 @@ export class QuotesComponent implements OnInit {
             if (unvotedQuote) {
               console.log('Showing pending quote modal for:', unvotedQuote.text);
               this.currentPendingQuote = unvotedQuote;
+              console.log(user)
               this.showPendingModal = true;
             } else {
               console.log('No unvoted quotes found for user:', user.uid);

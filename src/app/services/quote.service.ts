@@ -107,6 +107,20 @@ export class QuoteService {
     const user = await this.user$.pipe(take(1)).toPromise();
     if (!user) throw new Error('User not authenticated');
 
+    // Check if user is admin - admins cannot vote
+    try {
+      const userSnapshot = await getDocs(query(collection(this.firestore, 'users'), where('__name__', '==', user.uid)));
+      if (!userSnapshot.empty) {
+        const userData = userSnapshot.docs[0].data();
+        if (userData['role'] === 'admin') {
+          throw new Error('Admins cannot vote on quotes');
+        }
+      }
+    } catch (error) {
+      console.error('Error checking user role:', error);
+      throw new Error('Unable to verify user permissions');
+    }
+
     console.log('Voting on quote:', quoteId, 'with vote:', vote, 'by user:', user.uid);
 
     try {
@@ -148,12 +162,30 @@ export class QuoteService {
 
       // Check if quote should be approved or rejected
       const totalUsers = await this.getTotalUsers();
-      const yesVotes = quoteData.votes.filter((v: any) => v.vote === 'yes').length;
-      const noVotes = quoteData.votes.filter((v: any) => v.vote === 'no').length;
-      const approvalPercentage = (yesVotes / totalUsers) * 100;
-      const rejectionPercentage = (noVotes / totalUsers) * 100;
+      
+      // Filter votes to only count votes from regular users (not admins)
+      const regularUserVotes = [];
+      for (const vote of quoteData.votes) {
+        try {
+          // Get user data to check role
+          const userSnapshot = await getDocs(query(collection(this.firestore, 'users'), where('__name__', '==', vote.userId)));
+          if (!userSnapshot.empty) {
+            const userData = userSnapshot.docs[0].data();
+            if (userData['role'] === 'user') {
+              regularUserVotes.push(vote); // Only count votes from regular users
+            }
+          }
+        } catch (error) {
+          console.error('Error checking user role for vote:', error);
+        }
+      }
+      
+      const yesVotes = regularUserVotes.filter((v: any) => v.vote === 'yes').length;
+      const noVotes = regularUserVotes.filter((v: any) => v.vote === 'no').length;
+      const approvalPercentage = totalUsers > 0 ? (yesVotes / totalUsers) * 100 : 0;
+      const rejectionPercentage = totalUsers > 0 ? (noVotes / totalUsers) * 100 : 0;
 
-      console.log('Vote stats:', { yesVotes, noVotes, totalUsers, approvalPercentage, rejectionPercentage });
+      console.log('Vote stats (regular users only):', { yesVotes, noVotes, totalUsers, approvalPercentage, rejectionPercentage });
 
       if (approvalPercentage >= 50) {
         // Move to approved quotes
@@ -186,8 +218,15 @@ export class QuoteService {
     try {
       const usersRef = collection(this.firestore, 'users');
       const snapshot = await getDocs(usersRef);
-      console.log('Total users in database:', snapshot.size);
-      return snapshot.size;
+      
+      // Filter to only count users with role 'user' (exclude admins)
+      const regularUsers = snapshot.docs.filter(doc => {
+        const userData = doc.data();
+        return userData['role'] === 'user';
+      });
+      
+      console.log('Total regular users (excluding admins):', regularUsers.length);
+      return regularUsers.length;
     } catch (error) {
       console.error('Error getting total users:', error);
       // Return a default value to prevent errors
@@ -197,6 +236,19 @@ export class QuoteService {
 
   async getTotalUsersCount(): Promise<number> {
     return this.getTotalUsers();
+  }
+
+  async getUserById(userId: string): Promise<any> {
+    try {
+      const userSnapshot = await getDocs(query(collection(this.firestore, 'users'), where('__name__', '==', userId)));
+      if (!userSnapshot.empty) {
+        return userSnapshot.docs[0].data();
+      }
+      return null;
+    } catch (error) {
+      console.error('Error getting user by ID:', error);
+      return null;
+    }
   }
 
   getAllUsers(): Observable<any[]> {
